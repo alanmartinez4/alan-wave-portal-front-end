@@ -26,7 +26,7 @@ const App = () => {
 
         if(accounts.length !== 0) {
           const account = accounts[0];
-          console.log("Found an authorized accounts", account);
+          console.log("Found an authorized account.", account);
           setCurrentAccount(account);
         } else {
           console.log("No authorized account found.");
@@ -35,6 +35,27 @@ const App = () => {
         console.log(error);
       }
   }
+
+/*
+* Implment your connectWallet method here.
+*/
+const connectWallet = async () => {
+  try {
+    const { ethereum } = window;
+
+    if (!ethereum) {
+      alert("Get MetaMask!");
+      return;
+    }
+
+    const accounts = await ethereum.request({method: "eth_requestAccounts"});
+
+    console.log("Connected", accounts[0]);
+    setCurrentAccount(accounts[0]);
+  } catch(error) {
+    console.log(error);
+  }
+}
 
 /*
 * This runs our function when the page loads.
@@ -54,10 +75,17 @@ const App = () => {
         <div className="bio">
         I am alan and I am learning how to create and deploy a smart contract to an Ethereum network, pretty cool right? Connect your Ethereum wallet and wave at me!
         </div>
-
         <button className="waveButton" onClick={null}>
           Wave at Me
         </button>
+      {/*
+      * If there is no currentAccount render this button
+      */}
+      {!currentAccount && (
+        <button className="waveButton" onClick={connectWallet}>
+          Connect Wallet
+        </button>
+      )}
       </div>
     </div>
   );
